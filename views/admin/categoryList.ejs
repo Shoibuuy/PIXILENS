@@ -1,0 +1,142 @@
+<%- include('../partials/adminHeader') %>
+
+    <section class="content-main">
+        <div class="content-header">
+            <h2 class="content-title">Categories List</h2>
+            <div>
+                <a href="/admin/addCategory" class="btn btn-primary"><i class="material-icons md-plus"></i>Create
+                    Category</a>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (category.length> 0) { for (let i = 0; i < category.length; i++) { %>
+                                    <tr>
+                                        <td class="align-middle" style="padding: 20px">
+                                            <div class="d-flex align-items-center">
+                                                <img src="/adminassets/imgs/categoryImages/<%= category[i].image %>"
+                                                    class="img-sm" alt="img" style="width:40%; height: 40%" />
+                                            </div>
+                                        </td>
+                                        <td class="align-middle" style="padding: 15px">
+                                            <div>
+                                                <h6 class="mb-0 title">
+                                                    <%= category[i].category %>
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle" style="padding: 15px">
+                                            <div>
+                                                <h6 class="mb-0 title">
+                                                    <%= category[i].description %>
+                                                </h6>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle" style="padding: 15px">
+                                            <% if (category[i].isListed==true) { %>
+                                                <span
+                                                    class="badge rounded-0 alert-success d-flex align-items-center justify-content-center"
+                                                    style="height: 30px">Listed</span>
+                                                <% } else { %>
+                                                    <span
+                                                        class="badge rounded-0 alert-danger d-flex align-items-center justify-content-center"
+                                                        style="height: 30px">Unlisted</span>
+                                                    <% } %>
+                                        </td>
+                                        <td class="text-end align-middle" style="padding: 15px">
+                                            <div class="dropdown">
+                                                <a href="#" data-bs-toggle="dropdown"
+                                                    class="btn btn-light rounded btn-sm font-sm">
+                                                    <i class="material-icons md-more_horiz"></i>
+                                                </a>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item"
+                                                        href="/admin/editCategory?id=<%= category[i]._id %>">Edit</a>
+                                                    <% if (category[i].isListed==true) { %>
+                                                        <a class="dropdown-item text-danger"
+                                                            onclick="confirmListing('Unlist', '<%= category[i]._id %>')">Unlist
+                                                        </a>
+                                                        <% } else { %>
+                                                            <a class="dropdown-item text-success"
+                                                                onclick="confirmListing('List', '<%= category[i]._id %>')">List
+                                                            </a>
+                                                            <% } %>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% } } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pagination-area mt-30 mb-50">
+            <nav aria-label="Page navigation">
+              <ul class="pagination justify-content-start">
+                <% if (currentPage > 1) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="?page=<%= currentPage - 1 %>">
+                      <i class="material-icons md-chevron_left"></i>
+                    </a>
+                  </li>
+                <% } %>
+            
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                  <li class="page-item <% if (i === currentPage) { %>active<% } %>">
+                    <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                  </li>
+                <% } %>
+            
+                <% if (currentPage < totalPages) { %>
+                  <li class="page-item">
+                    <a class="page-link" href="?page=<%= currentPage + 1 %>">
+                      <i class="material-icons md-chevron_right"></i>
+                    </a>
+                  </li>
+                <% } %>
+              </ul>
+            </nav>
+          </div>
+    </section>
+
+    <script>
+        function confirmListing(action, categoryId) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action is irreversible!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: action,
+                customClass: {
+                    confirmButton: "btn btn-danger",
+                    cancelButton: "btn btn-primary",
+                },
+                width: "20rem",
+                heightAuto: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If the user confirms, redirect to the appropriate listing/unlisting URL
+                    window.location.href =
+                        "/admin/" + action.toLowerCase() + "Cat?id=" + categoryId;
+                }
+            });
+        }
+    </script>
+
+    <%- include('../partials/adminFooter') %>

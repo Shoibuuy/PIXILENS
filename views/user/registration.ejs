@@ -1,0 +1,130 @@
+<%- include('../layouts/header.ejs', { user: user }) %>
+
+
+<div class="row" style="margin-top: 20px;">
+  <div class="col-lg-3"></div>
+  <div class="col-lg-6">
+    <div class="login_wrap widget-taber-content p-30 background-white border-radius-5">
+      <div class="padding_eight_all bg-white">
+        <div class="heading_s1">
+          <h3 class="mb-30">Create an Account</h3>
+        </div>
+        <% if(message.length != 0){%>
+          <p style="color: red;"><%= message %></p>
+      <%} %> 
+        <!-- Form -->
+        <form method="post" action="/register">
+          <div class="form-group">
+            <input type="text"  name="name" placeholder="Username">
+            <div id="name-error" class="validation-error"></div>
+          </div>
+          <div class="form-group">
+            <input type="email"  name="email" placeholder="Email">
+            <div id="email-error" class="validation-error"></div>
+          </div>
+          <div class="form-group">
+            <input type="text"  name="mobile" placeholder="Mobile">
+            <div id="mobile-error" class="validation-error"></div>
+          </div>
+          <div class="form-group">
+            <input  type="password" name="password" placeholder="Password">
+            <div id="password-error" class="validation-error"></div>
+          </div>
+          <div class="form-group">
+            <input  type="password" name="password1" placeholder="Confirm Password">
+            <div id="password1-error" class="validation-error"></div>
+          </div>
+          <div class="form-group text-center">
+            <button type="submit" class="btn btn-fill-out btn-block hover-up" name="register">Register</button>
+          </div>
+        </form>
+
+        <div class="text-muted text-center">Already have an account? <a href="/login">Sign in now</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../layouts/footer') %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var form = document.querySelector('form');
+
+    form.addEventListener('submit', function (event) {
+      var name = form.querySelector('[name="name"]').value.trim();
+      var email = form.querySelector('[name="email"]').value.trim();
+      var mobile = form.querySelector('[name="mobile"]').value.trim();
+      var password = form.querySelector('[name="password"]').value.trim();
+      var password1 = form.querySelector('[name="password1"]').value.trim();
+
+      clearValidationMessages();
+
+      if (name === '') {
+        displayValidationError('name', 'Name is required');
+        event.preventDefault();
+      }
+
+      if (email === '') {
+        displayValidationError('email', 'Email is required');
+        event.preventDefault();
+      }
+
+      if (mobile === '') {
+        displayValidationError('mobile', 'Mobile is required');
+        event.preventDefault();
+      }
+
+      if (password === '') {
+        displayValidationError('password', 'Password is required');
+        event.preventDefault();
+      } else if (password.length < 8) {
+        displayValidationError('password', 'Password should be at least 8 characters');
+        event.preventDefault();
+      } else if (!hasUpperCase(password) || !hasLowerCase(password) || !hasDigit(password)) {
+        displayValidationError('password', 'Password should include at least one uppercase letter, one lowercase letter, and one digit');
+        event.preventDefault();
+      }
+
+      if (password1 === '') {
+        displayValidationError('password1', 'Confirm Password is required');
+        event.preventDefault();
+      } else if (password.length >= 8 && password !== password1) {
+        displayValidationError('password1', 'Passwords do not match');
+        event.preventDefault();
+      }
+    });
+
+    // Add event listeners for the input event on each input field
+    form.querySelectorAll('input').forEach(function (input) {
+      input.addEventListener('input', function () {
+        clearValidationMessages();
+      });
+    });
+
+    function displayValidationError(field, message) {
+      var errorElement = document.getElementById(field + '-error');
+      errorElement.textContent = message;
+      errorElement.style.color = 'red';
+    }
+
+    function clearValidationMessages() {
+      var validationErrorElements = document.querySelectorAll('.validation-error');
+      validationErrorElements.forEach(function (element) {
+        element.textContent = '';
+      });
+    }
+
+    function hasUpperCase(str) {
+      return (/[A-Z]/.test(str));
+    }
+
+    function hasLowerCase(str) {
+      return (/[a-z]/.test(str));
+    }
+
+    function hasDigit(str) {
+      return (/\d/.test(str));
+    }
+  });
+</script>

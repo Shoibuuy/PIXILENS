@@ -1,0 +1,74 @@
+<%- include('../partials/adminHeader') %>
+
+
+<section class="content-main">
+    <div class="content-header">
+        <h2 class="content-title">Add Category</h2>
+    </div>
+    <% if (typeof message !=='undefined' ) { %>
+        <p style="color: red">
+            <%= message %>
+        </p>
+        <% } %>
+            <div class="col-md-9">
+                <form id="form" action="" method="post" enctype="multipart/form-data" onsubmit="">
+                    <div class="mb-4">
+                        <label for="product_name" class="form-label">Name</label>
+                        <input type="text" placeholder="Category name" name="category"
+                            class="form-control" id="product_name" />
+                        <div class="error-message" style="color: red;" id="name-error"></div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Description</label>
+                        <textarea placeholder="Type here" name="description" 
+                            class="form-control"></textarea>
+                        <div class="error-message" style="color: red;" id="description-error"></div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="product_name" class="form-label">Image</label>
+                        <input type="file" name="image"  class="form-control" id="product_name" />
+                        <div class="error-message" style="color: red;" id="image-error"></div>
+                    </div>
+                    <div class="d-grid">
+                        <input type="submit" class="btn btn-primary" value="Create Category">
+                    </div>
+                </form>
+            </div>
+</section>
+
+<script>
+    document.getElementById('form').addEventListener('submit', function (event) {
+    const name = document.getElementById("product_name").value;
+    const nameError = document.getElementById("name-error");
+    const description = document.querySelector("textarea[name='description']").value;
+    const descriptionError = document.getElementById("description-error");
+    const image = document.querySelector("input[name='image']").value;
+    const imageError = document.getElementById("image-error");
+
+        nameError.textContent = "";
+
+        let valid = true;
+
+        if (name.trim() === '') {
+            nameError.textContent = "Name is required.";
+            valid = false;
+        } else if (description.trim() === '') {
+            descriptionError.textContent = "description is required.";
+            valid = false;
+        } else if (image.trim() === '') {
+            imageError.textContent = "image is required.";
+            valid = false;
+        }
+
+
+        if (!valid) {
+            event.preventDefault(); 
+        }
+    });
+</script>
+
+
+
+
+
+<%- include('../partials/adminFooter') %>

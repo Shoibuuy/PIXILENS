@@ -1,0 +1,151 @@
+<%- include('../partials/adminHeader') %>
+
+
+
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Products</h2>
+                <p>Add, Edit or Delete a product</p>
+            </div>
+            <div>
+                <a href="/admin/addProduct" class="btn btn-primary btn-sm rounded">Create</a>
+            </div>
+            
+        </div>
+        <form action="/admin/productList" method="GET" class="mb-3">
+            <div class="input-group">
+              <input type="text" name="search" class="form-control" placeholder="Search products" value="<%= search || '' %>">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-outline-secondary">Search</button>
+              </div>
+            </div>
+          </form>
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th width="40%">Name</th>
+                                <th width="20%">Category</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+                            <% for (let i=0; i < productData.length; i++) { %>
+                                <tr>
+                                    <td>
+                                        <img style="height: 40px;"
+                                            src="/productImages/<%= productData[i].productImages[0] %>"
+                                            alt="product Image" />
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <h6 class="mb-0 title">
+                                                <%= productData[i].name %>
+                                            </h6>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <h6>
+                                                <%= productData[i].category %>
+                                            </h6>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <h6>
+                                                <%= productData[i].quantity %>
+                                            </h6>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <% if (productData[i].isListed==true ) { %>
+                                            <span class="badge"
+                                                style="background-color: rgb(151, 231, 151);">Listed</span>
+                                            <% } else { %>
+                                                <span class="badge" style="background-color: red;">Unlisted</span>
+                                                <% } %>
+                                    </td>
+
+
+                                    <td class="text-end">
+                                        <div class="dropdown">
+                                            <a href="#" data-bs-toggle="dropdown"
+                                                class="btn btn-light rounded btn-sm font-sm">
+                                                <i class="material-icons md-more_horiz"></i>
+                                            </a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item"
+                                                    href="/admin/editProduct?id=<%= productData[i]._id %>">Edit info</a>
+                                                <a class="dropdown-item"
+                                                    href="/admin/productView?id=<%= productData[i]._id %>">View info</a>
+                                                <% if (productData[i].isListed==true) { %>
+                                                    <a class="dropdown-item text-danger"
+                                                        onclick="confirmListing('Unlist', '<%= productData[i]._id %>')">Unlist</a>
+                                                    <% } else { %>
+                                                        <a class="dropdown-item text-success"
+                                                            onclick="confirmListing('List', '<%= productData[i]._id %>')">List</a>
+                                                        <% } %>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <% } %>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <div class="pagination-area mt-15 mb-sm-5 mb-lg-0">
+                    <nav aria-label="Page navigation example">
+                      <ul class="pagination justify-content-start">
+                        <% range.forEach(page => { %>
+                          <li class="page-item <%= page === currentPage ? 'active' : '' %>">
+                            <a class="page-link" href="/admin/productList?page=<%= page %>">
+                                <%= page %>
+                              </a>
+                          </li>
+                        <% }); %>
+                      </ul>
+                    </nav>
+                  </div>      
+            </div>
+    </section>
+
+    
+
+    <script>
+        function confirmListing(action, productId) {
+            Swal.fire({
+                title: "Are you sure?",
+                text: "This action is irreversible!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: action,
+                customClass: {
+                    confirmButton: "btn btn-danger",
+                    cancelButton: "btn btn-primary",
+                },
+                width: "20rem",
+                heightAuto: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/admin/" + action.toLowerCase() + "Product?id=" + productId;
+                }
+            });
+        }
+    </script>
+
+    <%- include('../partials/adminFooter') %>

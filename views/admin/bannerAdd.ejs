@@ -1,0 +1,209 @@
+
+        <%- include('../partials/adminHeader') %>
+
+            <form action="" method="post" enctype="multipart/form-data" id="banner-form">
+                <section class="content-main">
+                    <div class="row">
+                        <div class="col-9">
+
+                            <div class="content-header">
+                                <h2 class="content-title">Add New Banner</h2>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-9">
+
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <h4>Picture</h4>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="input-upload">
+                                        <img id="image-preview" src="adminAssets/imgs/theme/upload.svg"
+                                            alt="">
+                                        <input class="form-control" type="file" name="image" id="banner_image"
+                                            accept="image/*">
+                                    </div>
+                                </div>
+                            </div> <!-- card end// -->
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-9 justify-content-center">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="mb-4">
+                                        <label for="banner_name" class="form-label">Main title</label>
+                                        <input type="text" name="title" placeholder="Type here" class="form-control" id="banner_name">
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="banner_link" class="form-label">Description</label>
+                                        <input type="text" name="subtitle" placeholder="Type here" class="form-control" id="banner_subtitle">
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="banner_subtitle" class="form-label">Subtitle</label>
+                                        <input type="text" name="description" placeholder="Type here" class="form-control" id="banner_link">
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center mb-4">
+                                    <input type="submit" value="submit" class="btn btn-md rounded font-sm hover-up">
+                                </div>
+                            </div> <!-- card end// -->
+                        </div>
+                    </div>
+
+
+                    <div id="invalid">
+                        <% if (typeof message !=='undefined' && message) { %>
+                            <p style="color: red;" id="message">
+                                <%= message %>
+                            </p>
+                            <% } %>
+                               
+                    </div>
+                    </div>
+
+
+                </section> <!-- content-main end// -->
+            </form>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const bannerForm = document.getElementById('banner-form');
+                    const bannerNameInput = document.getElementById('banner_name');
+                    const bannerSubtitleInput = document.getElementById('banner_subtitle');
+                    const bannerLinkInput = document.getElementById('banner_link');
+                    const bannerImageInput = document.getElementById('banner_image');
+                    const imagePreview = document.getElementById('image-preview');
+                    const invalidDiv = document.getElementById('invalid');
+            
+                    bannerForm.addEventListener('submit', function (event) {
+                        // Reset previous error messages
+                        invalidDiv.innerHTML = '';
+            
+                        // Validate banner name
+                        if (!bannerNameInput.value.trim()) {
+                            event.preventDefault();
+                            showError('Main title cannot be empty', bannerNameInput);
+                        }
+            
+                        // Validate banner subtitle
+                        if (!bannerSubtitleInput.value.trim()) {
+                            event.preventDefault();
+                            showError('Subtitle cannot be empty', bannerSubtitleInput);
+                        }
+            
+                        // Validate banner link
+                        if (!bannerLinkInput.value.trim()) {
+                            event.preventDefault();
+                            showError('Description cannot be empty', bannerLinkInput);
+                        }
+            
+                        // Validate banner image
+                        if (!bannerImageInput.files || bannerImageInput.files.length === 0) {
+                            event.preventDefault();
+                            showError('Please select an image', bannerImageInput);
+                        }
+            
+                        // Additional validation logic can be added here
+            
+                    });
+            
+                    function showError(message, inputElement) {
+                        // Check if an error message already exists for the field
+                        let errorElement = inputElement.parentNode.querySelector('.error-message');
+            
+                        // If not, create a new error message
+                        if (!errorElement) {
+                            errorElement = document.createElement('p');
+                            errorElement.className = 'error-message';
+                            errorElement.style.color = 'red';
+            
+                            // Insert the error message below the respective input field
+                            inputElement.parentNode.appendChild(errorElement);
+                        }
+            
+                        // Update the error message content
+                        errorElement.textContent = message;
+            
+                        // Scroll to the top of the form to make error messages visible
+                        bannerForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+                        // Highlight the input field with an error
+                        inputElement.style.border = '2px solid red';
+                    }
+            
+                    // Clear border highlighting and remove error messages when the user starts typing
+                    bannerNameInput.addEventListener('input', function () {
+                        bannerNameInput.style.border = '';
+                        removeErrorMessage(bannerNameInput);
+                    });
+            
+                    bannerSubtitleInput.addEventListener('input', function () {
+                        bannerSubtitleInput.style.border = '';
+                        removeErrorMessage(bannerSubtitleInput);
+                    });
+            
+                    bannerLinkInput.addEventListener('input', function () {
+                        bannerLinkInput.style.border = '';
+                        removeErrorMessage(bannerLinkInput);
+                    });
+            
+                    bannerImageInput.addEventListener('change', function () {
+                        imagePreview.style.border = '';
+                        removeErrorMessage(bannerImageInput);
+                    });
+            
+                    function removeErrorMessage(inputElement) {
+                        const errorElement = inputElement.parentNode.querySelector('.error-message');
+                        if (errorElement) {
+                            errorElement.remove();
+                        }
+                    }
+            
+                    // Image preview logic (unchanged)
+                    bannerImageInput.addEventListener('change', function () {
+                        if (this.files && this.files[0]) {
+                            const reader = new FileReader();
+            
+                            reader.onload = function (e) {
+                                imagePreview.src = e.target.result;
+                            };
+            
+                            reader.readAsDataURL(this.files[0]);
+                        } else {
+                            imagePreview.src = "../../public/adminassets/imgs/theme/upload.svg";
+                        }
+                    });
+                });
+            </script>
+            
+            
+            
+
+            <script>
+                const imagePreview = document.getElementById('image-preview');
+                const categoryImageInput = document.getElementById('banner_image');
+
+                categoryImageInput.addEventListener('change', function () {
+                    if (this.files && this.files[0]) {
+                        const reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            imagePreview.src = e.target.result;
+                        };
+
+                        reader.readAsDataURL(this.files[0]);
+                    } else {
+                        imagePreview.src = "../../public/adminassets/imgs/theme/upload.svg";
+                    }
+                });
+
+            </script>
+
+
+
+            <%- include('../partials/adminFooter.ejs') %>

@@ -1,0 +1,412 @@
+<%- include('../partials/adminHeader') %>
+
+    <style>
+        .error-message {
+            color: red;
+            display: none;
+        }
+    </style>
+
+    <form action="" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+        <section class="content-main">
+            <div class="row">
+                <div>
+                    <div class="content-header">
+                        <h2 class="content-title">Add New Product</h2>
+                        <a href="/admin/productList" class="btn btn-primary btn-sm rounded">Product List</a>
+                    </div>
+                    <p style="color: red">
+                        <%= message %>
+                    </p>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5>Media</h5>
+                    </div>
+                    <div class="card-body d-flex">
+                        <div class="m-4">
+                            <label for="fileInput1">Image 1:</label>
+                            <img id="imgView<%= 0 %>" src="/adminassets/imgs/theme/placeholder.jpg" class="border rounded mt-3" /><br />
+                            <div class="d-flex justify-content-around">
+                                <label class="edit-icon text-primary" for="fileInput1">
+                                    <i class="fa fa-pencil"></i> Add
+                                </label>
+                                <div class="edit-icon text-danger" onclick="deleteImage(event, 0)">
+                                    <a href="#" class="text-muted">
+                                        <i class="fa fa-close" aria-hidden="true"></i> Delete
+                                    </a>
+                                </div>
+                            </div>
+                            <input id="fileInput1" class="form-control hidden" accept="image/*" name="image1" type="file" onchange="viewImage(event, 0)" value=""  />
+                        </div>
+                    
+                        <div class="m-4">
+                            <label for="fileInput2">Image 2:</label>
+                            <img id="imgView<%= 1 %>" src="/adminassets/imgs/theme/placeholder.jpg" class="border rounded mt-3" />
+                            <div class="d-flex justify-content-around">
+                                <label class="edit-icon text-primary" for="fileInput2">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i> Add
+                                </label>
+                                <div class="edit-icon text-danger" onclick="deleteImage(event, 1)">
+                                    <a href="#" class="text-muted">
+                                        <i class="fa fa-close" aria-hidden="true"></i> Delete
+                                    </a>
+                                </div>
+                            </div>
+                            <input id="fileInput2" class="form-control hidden" name="image2" accept="image/*" type="file" onchange="viewImage(event, 1)" value="" />
+                        </div>
+                    
+                        <div class="m-4">
+                            <label for="fileInput3">Image 3:</label>
+                            <img id="imgView<%= 2 %>" src="/adminassets/imgs/theme/placeholder.jpg" class="border rounded mt-3" />
+                            <div class="d-flex justify-content-around">
+                                <label class="edit-icon text-primary" for="fileInput3">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i> Add
+                                </label>
+                                <div class="edit-icon text-danger" onclick="deleteImage(event, 2)">
+                                    <a href="#" class="text-muted">
+                                        <i class="fa fa-close" aria-hidden="true"></i> Delete
+                                    </a>
+                                </div>
+                            </div>
+                            <input id="fileInput3" class="form-control hidden" accept="image/*" name="image3" type="file" onchange="viewImage(event, 2)" value="" />
+                        </div>
+                    
+                        <div class="m-4">
+                            <label for="fileInput4">Image 4:</label>
+                            <img id="imgView<%= 3 %>" src="/adminassets/imgs/theme/placeholder.jpg" class="border rounded mt-3" />
+                            <div class="d-flex justify-content-around">
+                                <label class="edit-icon text-primary" for="fileInput4">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i> Add
+                                </label>
+                                <div class="edit-icon text-danger" onclick="deleteImage(event, 3)">
+                                    <a href="#" class="text-muted">
+                                        <i class="fa fa-close" aria-hidden="true"></i> Delete
+                                    </a>
+                                </div>
+                            </div>
+                            <input id="fileInput4" class="form-control hidden" accept="image/*" name="image4" type="file" onchange="viewImage(event, 3)" value="" />
+                        </div>
+                    </div>                    
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div>
+                            <!-- Description Section -->
+                            <label class="form-label" for="product_description">Description</label>
+                            <textarea placeholder="Type here" class="form-control" name="description"
+                                id="product_description" rows="4"></textarea>
+                            <div id="description_error" class="error-message"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5 for="product_shape" class="mb-3">Shape</h5>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" value="Octagonal"
+                                                id="shape_octagonal" name="shape" />
+                                            <label class="form-check-label" for="shape_octagonal">Octagonal</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" id="shape_aviator"
+                                                value="Aviator" name="shape" />
+                                            <label class="form-check-label" for="shape_aviator">Aviator</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" id="shape_wayferer"
+                                                value="Wayferer" name="shape" />
+                                            <label class="form-check-label" for="shape_wayferer">Wayferer</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" id="shape_rectangle"
+                                                name="shape" value="Rectangle" />
+                                            <label class="form-check-label" for="shape_rectangle">Rectangle</label>
+                                        </div>
+                                        <div id="product_shape_error" class="error-message"></div>
+                                    </div>
+
+                                    <div class="col-6 mb-3">
+                                        <h5 for="product_type" class="mb-3">Type</h5>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="type" id="type_rimless"
+                                                value="Rimless" />
+                                            <label class="form-check-label" for="type_rimless">Rimless</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="type" id="type_half_rim"
+                                                value="Half Rim" />
+                                            <label class="form-check-label" for="type_half_rim">Half Rim</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="type" id="type_full_rim"
+                                                value="Full Rim" />
+                                            <label class="form-check-label" for="type_full_rim">Full Rim</label>
+                                        </div>
+                                        <div id="product_type_error" class="error-message"></div>
+                                    </div>
+
+                                </div>
+
+                                <hr />
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5 class="mb-3">Brand</h5>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="brand" id="brand_vincent"
+                                                value="Vincent Chase" />
+                                            <label class="form-check-label" for="brand_vincent">Vincent Chase</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="brand" id="brand_john"
+                                                value="John Jacobs" />
+                                            <label class="form-check-label" for="brand_john">John Jacobs</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="brand" id="brand_hooper"
+                                                value="Hooper" />
+                                            <label class="form-check-label" for="brand_hooper">Hooper</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="brand" id="brand_carlton"
+                                                value="Carlton London" />
+                                            <label class="form-check-label" for="brand_carlton">Carlton London</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="brand"
+                                                id="brand_ted_smith" value="TED SMITH" />
+                                            <label class="form-check-label" for="brand_ted_smith">TED SMITH</label>
+                                        </div>
+                                        <div id="brand_error" class="error-message"></div>
+
+                                    </div>
+                                    
+
+                                    <div class="col-4">
+                                        <div class="mb-4">
+                                            <h5 class="mb-3">Categories</h5>
+                                            <% if (category && category.length> 0) { for (let i = 0; i <
+                                                    category.length; i++) { %>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" name="category" type="radio"
+                                                            value="<%= category[i].category %>"
+                                                            id="category_<%= i %>" />
+                                                        <label class="form-check-label" for="category_<%= i %>">
+                                                            <%= category[i].category %>
+                                                        </label>
+                                                    </div>
+                                                    <% } } %>
+                                                        <div id="category_error" class="error-message"></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            <hr>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5 class="mb-3">Material</h5>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="material"
+                                                id="material_acetate" value="Acetate" />
+                                            <label class="form-check-label" for="material_acetate">Acetate</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="material"
+                                                id="material_italian_acetate" value="Italian Acetate" />
+                                            <label class="form-check-label" for="material_italian_acetate">Italian
+                                                Acetate</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="material"
+                                                id="material_stainless_steel" value="Stainless Steel" />
+                                            <label class="form-check-label" for="material_stainless_steel">Stainless
+                                                Steel</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="material"
+                                                id="material_polycarbonate" value="Polycarbonate" />
+                                            <label class="form-check-label"
+                                                for="material_polycarbonate">Polycarbonate</label>
+                                        </div>
+                                        <div id="material_error" class="error-message"></div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+
+                        <div class="card mb-4">
+                            <div class="card-body ms-4">
+                                <div class="row">
+                                    <div class="mb-4">
+                                    <label for="product_title" class="form-label">Product title</label>
+                                    <input type="text" placeholder="Type here" class="form-control" name="name"
+                                        id="product_title" autocomplete="off" />
+                                    <div id="product_title_error" class="error-message"></div>
+                                </div>
+                                    <div class=" col-6 mb-4">
+                                        <!-- Price Section -->
+                                        <label class="form-label" for="product_price">Price</label>
+                                        <input type="text" placeholder="Type here" name="price" id="product_price"
+                                            class="form-control" />
+                                        <div id="price_error" class="error-message"></div>
+                                    </div>
+
+                                    <div class=" col-6 mb-4">
+                                        <!-- Discount Price Section -->
+                                        <label class="form-label" for="discount_price">Discount Price</label>
+                                        <input type="text" placeholder="Type here" name="discountPrice" id="discount_price"
+                                            class="form-control" />
+                                        <div id="discount_error" class="error-message"></div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Quantity Section -->
+                                <div class="mb-4">
+                                    <label class="form-label" for="product_quantity">Quantity</label>
+                                    <input type="text" placeholder="Type here" name="quantity" id="product_quantity"
+                                        class="form-control" />
+                                    <div id="quantity_error" class="error-message"></div>
+                                </div>
+
+                                
+                            
+
+                                <div class="d-grid ">
+                                    <button type="submit" class="btn btn-primary">Add Product</button>
+                                </div>
+                                <hr />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </section>
+    </form>
+
+    <script>
+        function viewImage(event, imageIndex) {
+            const imgView = document.getElementById(`imgView${imageIndex}`);
+            imgView.src = URL.createObjectURL(event.target.files[0]);
+        }
+
+        function deleteImage(event, imageIndex) {
+            const imgView = document.getElementById(`imgView${imageIndex}`);
+            imgView.src = "/adminassets/imgs/theme/placeholder.jpg";
+
+            const fileInput = document.getElementById(`fileInput${imageIndex + 1}`);
+            fileInput.value = "";
+        }
+    </script>
+
+    <script>
+        function validateForm() {
+    // Reset error messages
+    resetErrors();
+
+    // Get form elements
+    const title = document.getElementById('product_title').value;
+    const description = document.getElementById('product_description').value;
+    const price = document.getElementById('product_price').value;
+    const discount = document.getElementById('discount_price').value;
+    const quantity = document.getElementById('product_quantity').value;
+
+    // Validate product title
+    if (title.trim() === '') {
+        showError('product_title_error', 'Please enter a product title.');
+        return false;
+    }
+
+    // Validate description
+    if (description.trim() === '') {
+        showError('description_error', 'Please enter a product description.');
+        return false;
+    }
+
+    // Validate price
+    if (price.trim() === '' || isNaN(price) || parseFloat(price) < 0) {
+        showError('price_error', 'Please enter a valid price greater than or equal to 0.');
+        return false;
+    }
+
+    // Validate discount price
+    if (discount.trim() === '' || (isNaN(discount) || parseFloat(discount) < 0 || parseFloat(discount) >= parseFloat(price))) {
+        showError('discount_error', 'Please enter a valid discount price less than the actual price.');
+        return false;
+    }
+
+    // Validate quantity
+    if (quantity.trim() === '' || isNaN(quantity) || parseInt(quantity) <= 0) {
+        showError('quantity_error', 'Please enter a valid quantity.');
+        return false;
+    }
+
+    // Validate radio buttons
+    const shape = document.querySelector('input[name="shape"]:checked');
+    const type = document.querySelector('input[name="type"]:checked');
+    const brand = document.querySelector('input[name="brand"]:checked');
+    const category = document.querySelector('input[name="category"]:checked');
+    const material = document.querySelector('input[name="material"]:checked');
+
+    if (!shape) {
+        showError('product_shape_error', 'Please select a shape.');
+        return false;
+    }
+
+    if (!type) {
+        showError('product_type_error', 'Please select a type.');
+        return false;
+    }
+
+    if (!brand) {
+        showError('brand_error', 'Please select a brand.');
+        return false;
+    }
+
+    if (!category) {
+        showError('category_error', 'Please select a category.');
+        return false;
+    }
+
+    if (!material) {
+        showError('material_error', 'Please select a material.');
+        return false;
+    }
+
+    // If all validation checks pass, return true to submit the form
+    return true;
+}
+
+
+    function showError(elementId, message) {
+        const errorElement = document.getElementById(elementId);
+        errorElement.innerHTML = message;
+        errorElement.style.display = 'block';
+    }
+
+    function resetErrors() {
+        const errorElements = document.querySelectorAll('.error-message');
+        errorElements.forEach((element) => {
+            element.innerHTML = '';
+            element.style.display = 'none';
+        });
+    }
+</script>
+

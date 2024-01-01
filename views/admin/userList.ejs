@@ -1,0 +1,119 @@
+<%- include('../partials/adminHeader') %>
+
+    <section class="content-main">
+        <div class="content-header">
+            <h2 class="content-title">Users list</h2>
+        </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th class="text-end">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if(userData.length> 0){ for(let i = 0 ; i < userData.length ; i++){%>
+                                    <tr>
+                                        <td width="40%">
+                                            <a href="#" class="itemside">
+                                                <div class="left">
+                                                    <img src="adminassets/imgs/people/user.png"
+                                                        class="img-sm img-avatar" alt="Userpic" />
+                                                </div>
+                                                <div class="info pl-3">
+                                                    <h6 class="mb-0 title">
+                                                        <%= userData[i].name %>
+                                                    </h6>
+                                                </div>
+                                            </a>
+                                        </td>
+                                        <td><span>
+                                                <%= userData[i].email %>
+                                            </span></td>
+                                        <% if (userData[i].is_blocked===0) { %>
+                                            <td>
+                                                <span class="badge rounded-pill alert-success">Active</span>
+                                            </td>
+                                            <% } else { %>
+                                                <td>
+                                                    <span class="badge rounded-pill alert-danger">Blocked</span>
+                                                </td>
+                                                <% } %>
+                                                    <td class="text-end">
+                                                        <% if (userData[i].is_blocked===0) { %>
+                                                            <form id="blockForm_<%= userData[i].id %>" method="post"
+                                                                action="/admin/blockUser/<%= userData[i].id %>">
+                                                                <button type="button"
+                                                                    onclick="confirmAction('block', '<%= userData[i].id %>')"
+                                                                    class="btn btn-sm btn-brand rounded font-sm mt-15">
+                                                                    Block
+                                                                </button>
+                                                            </form>
+                                                            <% } else { %>
+                                                                <form id="unblockForm_<%= userData[i].id %>"
+                                                                    method="post"
+                                                                    action="/admin/unblockUser/<%= userData[i].id %>">
+                                                                    <button type="button"
+                                                                        onclick="confirmAction('unblock', '<%= userData[i].id %>')"
+                                                                        class="btn btn-sm btn-brand rounded font-sm mt-15">
+                                                                        Unblock
+                                                                    </button>
+                                                                </form>
+                                                                <% } %>
+                                                    </td>
+                                    </tr>
+                                    <% } } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div> 
+        </div>
+        <div class="pagination-area mt-15 mb-50">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-start">
+                    <% for(let i = 1; i <= totalPages; i++) { %>
+                        <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                            <a class="page-link" href="/userList?page=<%= i %>"><%= i %></a>
+                        </li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div> 
+    </section>
+
+
+    <%- include('../partials/adminFooter') %>
+
+
+
+    <script>
+        function confirmAction(action, userId) {
+            Swal.fire({
+                title: "Are you sure?",
+                html: "<p style='font-size: 16px; line-height: 1.4em;'>This action is irreversible!</p>",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "" + action + " it!",
+                customClass: {
+                    confirmButton: "btn btn-danger",
+                    cancelButton: "btn btn-primary",
+                },
+                width: "20rem", 
+                heightAuto: false, 
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If the user confirms, submit the form
+                    document.getElementById(action + "Form_" + userId).submit();
+                }
+            });
+        }
+    </script>
+    
+    

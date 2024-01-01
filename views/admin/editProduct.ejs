@@ -1,0 +1,404 @@
+<%- include('../partials/adminHeader') %>
+<style>
+.error-message {
+    color: red;
+    display: block; 
+}
+</style>
+
+
+<form action="/admin/editProduct" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+    <input type="hidden" name="product_id" value="<%= productData._id %>">
+    <section class="content-main">
+        <div class="row">
+            <div>
+                <div class="content-header">
+                    <h2 class="content-title">Edit Product</h2>
+                </div>
+                <p style="color: red">
+                    <%= message %>
+                </p>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5>Media</h5>
+                </div>
+                <div class="card-body d-flex">
+
+                    <div class="m-4">
+                        <label for="image1">Image 1:</label>
+                        <img id="imgView<%= 0 %>"
+                            src="/productImages/<%= productData.productImages[0] %>"
+                            alt="hello" class="border rounded mt-3"><br>
+                        <div class="d-flex justify-content-around">
+                            <label class="edit-icon" for="fileInput1">
+
+                                <i class="fa fa-pencil" aria-hidden="true"></i> Edit
+                            </label>
+                            <label class="edit-icon text-danger">
+                                <a href="/admin/productimagedelete?id=<%= productData._id %>&imageIndex=0"
+                                    class="text-muted"> <i class="fa fa-close "
+                                        aria-hidden="true"></i> Delete</a>
+                            </label>
+
+                        </div>
+                        <input id="fileInput1" class="form-control hidden" name="image1"
+                            type="file" onchange="viewImage(event, 0)" accept="image/*"
+                            value="<%= productData.productImages[0] %>">
+                    </div>
+                    <br>
+                    <div class="m-4 ">
+                        <label for="image2">Image 2:</label>
+                        <img id="imgView<%= 1 %>"
+                            src="/productImages/<%= productData.productImages[1] %>"
+                            alt="" class="border rounded mt-3">
+                        <div class="d-flex justify-content-around">
+                            <label class="edit-icon" for="fileInput2">
+
+                                <i class="fa fa-pencil" aria-hidden="true"></i> Edit
+                            </label>
+                            <label class="edit-icon text-danger">
+                                <a href="/admin/productimagedelete?id=<%= productData._id %>&imageIndex=1"
+                                    class="text-muted"> <i class="fa fa-close "
+                                        aria-hidden="true"></i> Delete</a>
+                            </label>
+                        </div>
+
+                        <input id="fileInput2" class="form-control hidden" name="image2"
+                            type="file" onchange="viewImage(event,1)" accept="image/*"
+                            value="<%= productData.productImages[1] %>">
+                    </div>
+                    <br>
+                    <div class="m-4 ">
+                        <label for="image3">Image 3:</label>
+                        <img id="imgView<%= 2 %>"
+                            src="/productImages/<%= productData.productImages[2] %>"
+                            alt="" class="border rounded mt-3">
+                        <div class="d-flex justify-content-around">
+                            <label class="edit-icon" for="fileInput3">
+
+                                <i class="fa fa-pencil" aria-hidden="true"></i> Edit
+                            </label>
+                            <label class="edit-icon text-danger">
+                                <a href="/admin/productimagedelete?id=<%= productData._id %>&imageIndex=2"
+                                    class="text-muted"> <i class="fa fa-close "
+                                        aria-hidden="true"></i> Delete</a>
+                            </label>
+                        </div>
+                        <input id="fileInput3" accept="image/*"  class="form-control hidden" name="image3"
+                            type="file" onchange="viewImage(event,2)"
+                            value="<%= productData.productImages[2] %>">
+                    </div>
+                    <br>
+                    <div class="m-4 ">
+                        <label for="image4">Image 4:</label>
+                        <img id="imgView<%= 3 %>"
+                            src="/productImages/<%= productData.productImages[3] %>"
+                            alt="" class="border rounded mt-3">
+                        <div class="d-flex justify-content-around">
+                            <label class="edit-icon" for="fileInput4">
+
+                                <i class="fa fa-pencil" aria-hidden="true"></i> Edit
+                            </label>
+                            <label class="edit-icon ">
+                                <a href="/admin/productimagedelete?id=<%= productData._id %>&imageIndex=3"
+                                    class="text-muted"> <i class="fa fa-close "
+                                        aria-hidden="true"></i>Delete</a>
+
+
+                            </label>
+                        </div>
+                        <input id="fileInput4" accept="image/*" class="form-control hidden" name="image4"
+                            type="file" onchange="viewImage(event,3)"
+                            value="<%= productData.productImages[3] %>">
+                    </div>
+                    <br>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div>
+                            <!-- Description Section -->
+                            <label class="form-label" for="product_description">Description</label>
+                            <textarea placeholder="Type here" class="form-control" name="description"
+                                id="product_description" rows="4"><%= productData.description %></textarea>
+                            <div id="description_error" class="error-message"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5 for="product_shape" class="mb-3">Shape</h5>
+                                    
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" value="Octagonal" id="shape_octagonal" name="shape"
+                                                <%= productData.shape === 'Octagonal' ? 'checked' : '' %> />
+                                            <label class="form-check-label" for="shape_octagonal">Octagonal</label>
+                                        </div>
+                                    
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" id="shape_aviator" value="Aviator" name="shape"
+                                                <%= productData.shape === 'Aviator' ? 'checked' : '' %> />
+                                            <label class="form-check-label" for="shape_aviator">Aviator</label>
+                                        </div>
+                                    
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" id="shape_wayferer" value="Wayferer" name="shape"
+                                                <%= productData.shape === 'Wayferer' ? 'checked' : '' %> />
+                                            <label class="form-check-label" for="shape_wayferer">Wayferer</label>
+                                        </div>
+                                    
+                                        <div class="form-check">
+                                            <input type="radio" value="Rectangle" class="form-check-input" id="shape_rectangle" name="shape" value="rectangle"
+                                                <%= productData.shape === 'Rectangle' ? 'checked' : '' %> />
+                                            <label class="form-check-label" for="shape_rectangle">Rectangle</label>
+                                        </div>
+                                    
+                                        <div id="product_shape_error" class="error-message"></div>
+                                    </div>
+                                    
+
+                                    <div class="col-6 mb-3">
+                                        <h5 for="product_type" class="mb-3">Type</h5>
+                                    
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="type" id="type_rimless" value="Rimless"
+                                                <%= productData.type === 'Rimless' ? 'checked' : '' %> />
+                                            <label class="form-check-label" for="type_rimless">Rimless</label>
+                                        </div>
+                                    
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="type" id="type_half_rim" value="Half Rim"
+                                                <%= productData.type === 'Half Rim' ? 'checked' : '' %> />
+                                            <label class="form-check-label" for="type_half_rim">Half Rim</label>
+                                        </div>
+                                    
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="type" id="type_full_rim" value="Full Rim"
+                                                <%= productData.type === 'Full Rim' ? 'checked' : '' %> />
+                                            <label class="form-check-label" for="type_full_rim">Full Rim</label>
+                                        </div>
+                                    
+                                        <div id="product_type_error" class="error-message"></div>
+                                    </div>
+                                    
+                                </div>
+
+                                <hr />
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5 class="mb-3">Brand</h5>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="brand" id="brand_vincent" value="Vincent Chase"
+                                                <% if (productData.brand === 'Vincent Chase') { %> checked <% } %> />
+                                            <label class="form-check-label" for="brand_vincent">Vincent Chase</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="brand" id="brand_john" value="John Jacobs"
+                                                <% if (productData.brand === 'John Jacobs') { %>checked<% } %> />
+                                            <label class="form-check-label" for="brand_john">John Jacobs</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="brand" id="brand_hooper" value="Hooper"
+                                                <% if (productData && productData.brand === 'Hooper') { %>checked<% } %> />
+                                            <label class="form-check-label" for="brand_hooper">Hooper</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="brand" id="brand_carlton" value="Carlton London"
+                                                <% if (productData && productData.brand === 'Carlton London') { %>checked<% } %> />
+                                            <label class="form-check-label" for="brand_carlton">Carlton London</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input type="radio" class="form-check-input" name="brand" id="brand_ted_smith" value="TED SMITH"
+                                                <% if (productData && productData.brand === 'TED SMITH') { %>checked<% } %> />
+                                            <label class="form-check-label" for="brand_ted_smith">TED SMITH</label>
+                                        </div>
+                                        <div id="brand_error" class="error-message"></div>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <div class="mb-4">
+                                            <h5 class="mb-3">Categories</h5>
+                                            <% if (category && category.length > 0) { 
+                                                for (let i = 0; i < category.length; i++) { %>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" name="category" type="radio"
+                                                            value="<%= category[i].category %>"
+                                                            id="category_<%= i %>"
+                                                            <% if (category[i].category === productData.category) { %>checked<% } %> />
+                                                        <label class="form-check-label" for="category_<%= i %>">
+                                                            <%= category[i].category %>
+                                                        </label>
+                                                    </div>
+                                                <% } 
+                                            } %>
+                                            <div id="category_error" class="error-message"></div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            <hr>
+                            <div class="row">
+    <div class="col-6">
+        <h5 class="mb-3">Material</h5>
+
+        <div class="form-check">
+            <input type="radio" class="form-check-input" name="material" id="material_acetate"
+                value="Acetate" <%= productData.material === 'Acetate' ? 'checked' : '' %> />
+            <label class="form-check-label" for="material_acetate">Acetate</label>
+        </div>
+
+        <div class="form-check">
+            <input type="radio" class="form-check-input" name="material" id="material_italian_acetate"
+                value="Italian Acetate" <%= productData.material === 'Italian Acetate' ? 'checked' : '' %> />
+            <label class="form-check-label" for="material_italian_acetate">Italian Acetate</label>
+        </div>
+
+        <div class="form-check">
+            <input type="radio" class="form-check-input" name="material" id="material_stainless_steel"
+                value="Stainless Steel" <%= productData.material === 'Stainless Steel' ? 'checked' : '' %> />
+            <label class="form-check-label" for="material_stainless_steel">Stainless Steel</label>
+        </div>
+
+        <div class="form-check">
+            <input type="radio" class="form-check-input" name="material" id="material_polycarbonate"
+                value="Polycarbonate" <%= productData.material === 'Polycarbonate' ? 'checked' : '' %> />
+            <label class="form-check-label" for="material_polycarbonate">Polycarbonate</label>
+        </div>
+
+        <div id="material_error" class="error-message"></div>
+    </div>
+</div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+
+                        <div class="card mb-4">
+                            <div class="card-body ms-4">
+                                <div class="row">
+                                    <div class="mb-4">
+                                    <label for="product_title" class="form-label">Product title</label>
+                                    <input type="text" value="<%=productData.name%>" placeholder="Type here" class="form-control" name="name"
+                                        id="product_title" autocomplete="off" />
+                                    <div id="product_title_error" class="error-message"></div>
+                                </div>
+                                    <div class=" col-6 mb-4">
+                                        <!-- Price Section -->
+                                        <label class="form-label" for="product_price">Price</label>
+                                        <input type="text"  value="<%=productData.price%>"  placeholder="Type here" name="price" id="product_price"
+                                            class="form-control" />
+                                        <div id="price_error" class="error-message"></div>
+                                    </div>
+
+                                    <div class=" col-6 mb-4">
+                                        <!-- Discount Price Section -->
+                                        <label class="form-label" for="discount_price">Discount Price</label>
+                                        <input type="text" value="<%=productData.discountPrice%>"  placeholder="Type here" name="discount" id="discount_price"
+                                            class="form-control" />
+                                        <div id="discount_error" class="error-message"></div>
+                                    </div>
+                                </div>
+
+
+                                <!-- Quantity Section -->
+                                <div class="mb-4">
+                                    <label class="form-label" for="product_quantity">Quantity</label>
+                                    <input type="text" placeholder="Type here"  value="<%=productData.quantity%>"  name="quantity" id="product_quantity"
+                                        class="form-control" />
+                                    <div id="quantity_error" class="error-message"></div>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary" onclick="validateForm()">Add changes</button>
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </form>
+
+
+
+    <script>
+    function viewImage(event, imageIndex) {
+        const imgView = document.getElementById(`imgView${imageIndex}`);
+        imgView.src = URL.createObjectURL(event.target.files[0]);
+    }
+
+    function deleteImage(event, imageIndex) {
+        const imgView = document.getElementById(`imgView${imageIndex}`);
+        imgView.src = "/productImages";
+
+        const fileInput = document.getElementById(`fileInput${imageIndex + 1}`);
+        fileInput.value = "";
+    }
+
+    function validateForm() {
+    const productPrice = parseFloat(document.getElementById("product_price").value);
+    const discountPrice = parseFloat(document.getElementById("discount_price").value);
+    const quantity = parseInt(document.getElementById("product_quantity").value, 10);
+
+    // Clear existing error messages
+    clearErrorMessages();
+
+    // Check if both price and discount price are non-negative
+    if (productPrice < 0) {
+        displayErrorMessage("product_price", "Price cannot be negative");
+        return false;
+    }
+
+    if (discountPrice < 0) {
+        displayErrorMessage("discount_price", "Discount Price cannot be negative");
+        return false;
+    }
+
+    // Check if the discounted price is less than the actual price
+    if (discountPrice >= productPrice) {
+        displayErrorMessage("discount_price", "Discount Price must be less than the actual price");
+        return false;
+    }
+
+    // Check if quantity is non-negative
+    if (quantity < 0) {
+        displayErrorMessage("product_quantity", "Quantity cannot be negative");
+        return false;
+    }
+
+    // If all validations pass, the form can be submitted
+    return true;
+}
+
+
+    function displayErrorMessage(fieldId, message) {
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "error-message";
+        errorDiv.textContent = message;
+
+        const field = document.getElementById(fieldId);
+        field.parentNode.appendChild(errorDiv);
+    }
+
+    function clearErrorMessages() {
+        const errorMessages = document.querySelectorAll(".error-message");
+        errorMessages.forEach((errorMessage) => {
+            errorMessage.parentNode.removeChild(errorMessage);
+        });
+    }
+</script>
+
+
+
+<%- include('../partials/adminFooter') %>
+

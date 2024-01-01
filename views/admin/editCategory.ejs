@@ -1,0 +1,62 @@
+<%- include('../partials/adminHeader')%>
+
+
+    <section class="content-main">
+
+        <div class="content-header">
+
+            <div>
+                <% if (categories) { %>
+                    <h2 class="content-title card-title">Edit Category <%= categories.category %> </h2>
+                <% } else { %>
+                    <h2 class="content-title card-title">Edit Category </h2>
+                <% } %>
+                <p>Add, edit, or delete a category</p>
+            </div>
+
+        </div>
+        <div class="div d-flex">
+
+            <div class="card col-6 ">
+
+                <div class="card-body ">
+                    <div class="row">
+                        <div class="col-md">
+                            <form action="" method="post" enctype="multipart/form-data" id="form">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Category</label>
+                                    <% if(message){ %>
+                                        <p style="color: red;">
+                                            <%= message %>
+                                        </p>
+                                   <% } %>
+                                   <input type="text" placeholder="Type here" class="form-control" value="<%= categories.category %>" name="category" id="category" />
+                                </div>
+                                <input type="hidden" name="category_id" value="<%= categories._id %>">
+
+                                <div class="mb-4">
+                                    <label class="form-label">Description</label>
+                                    <input class="form-control" value="<%= categories.description %>"
+                                        name="description" id="description" />
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product_slug" class="form-label">Image</label>
+                                    <input type="file" class="form-control" name="image" id="image" value="adminassets/imgs/categoryImages/<%= categories.image %>" />
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary"> Apply changes</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- card .// -->
+            <div class="card col-4 ms-3 d-flex align-items-center justify-content-center ">
+                <img src="adminassets/imgs/categoryImages/<%= categories.image %>" alt="avatar"
+                    style="width: 120px;">
+            </div>
+        </div>
+    </section> <!-- content-main end// -->
+</main>
+
+<%- include('../partials/adminFooter') %>

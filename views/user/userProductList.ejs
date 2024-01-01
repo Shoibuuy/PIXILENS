@@ -1,0 +1,289 @@
+<%- include('../layouts/header') %>
+
+
+
+    <section class="mt-50 mb-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <form action="/productList" method="get">
+                        <div class="input-group mb-3">
+                            <input type="hidden" name="searchcategory" value="<%= selectedFilters.category %>">
+                            <input type="hidden" name="searchtype" value="<%= selectedFilters.type %>">
+                            <input type="hidden" name="searchbrand" value="<%= selectedFilters.brand %>">
+                            <input type="hidden" name="searchmaterial" value="<%= selectedFilters.material %>">
+                            <input type="hidden" name="searchshape" value="<%= selectedFilters.shape %>">
+                            <input type="text" class="form-control" placeholder="Search products..." name="search">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="submit">Search</button>
+                            </div>
+                        </div>
+                        <% if (search) { %>
+                            <p>Search Results for: <%= search %></p>
+                          <% } %>
+                          
+                    </form>
+                </div>
+            </div>
+            <div class="row flex-row-reverse">
+                <div class="col-lg-9">
+                    <div class="shop-product-fillter">
+                        <div class="totall-product">
+                            <p> We found <strong class="text-brand">
+                                    <%= totalProducts %>
+                                </strong> items for you!</p>
+                        </div>
+                       
+                        <div class="sort-by-product-area">
+                            <div class="sort-by-cover">
+                                <div class="sort-by-product-wrap">
+                                    <div class="sort-by">
+                                        <span><i class="fi-rs-apps-sort"></i>Sort by:</span>
+                                    </div>
+                                    <div class="sort-by-dropdown-wrap">
+                                        <span> Featured <i class="fi-rs-angle-small-down"></i></span>
+                                    </div>
+                                </div>
+                                <div class="sort-by-dropdown">
+                                    <ul>
+                                        <li><a href="/productList">Featured</a></li>
+                                        <li><a href="/productList?sort=1">Price: Low to High</a></li>
+                                        <li><a href="/productList?sort=-1">Price: High to Low</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row product-grid-3">
+                        <% for (let i=0; i < productData.length; i++) { %>
+                            <div class="col-lg-4 col-md-4 col-12 col-sm-6">
+                                <div class="product-cart-wrap mb-30">
+                                    <div class="product-img-action-wrap">
+                                        <div class="product-img product-img-zoom">
+                                            <a href="/productPage?id=<%= productData[i]._id %>">
+                                                <img class="default-img"
+                                                    src="/productImages/<%= productData[i].productImages[0] %>" alt="">
+                                            </a>
+                                        </div>
+                                        <div class="product-action-1">
+                                            <a aria-label="Add To Wishlist" class="action-btn small hover-up"
+                                                href="/addTowishlist?id=<%= productData[i]._id %>" tabindex="0"><i class="fi-rs-heart"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="product-content-wrap" style="height: 150px;">
+                                        <div class="product-category">
+                                            <a href="#">
+                                                <%= productData[i].category %>
+                                            </a>
+                                        </div>
+                                        <h2><a href="/productPage?id=<%= productData[i]._id %>">
+                                                <%= productData[i].name %>
+                                            </a></h2>
+                                        <div class="product-price">
+                                            <span>
+                                                <%= productData[i].discountPrice %>
+                                            </span>
+                                            <span class="old-price">
+                                                <%= productData[i].price %>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                    </div>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination">
+                            <!-- Update the previous page link -->
+                            <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                                <a class="page-link page-link-prev"
+                                    href="?page=<%= currentPage - 1 %>&sort=<%= sortingParameter %>"
+                                    aria-label="Previous" tabindex="-1" aria-disabled="<%= currentPage === 1 %>">
+                                    <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+                                </a>
+                            </li>
+
+                            <!-- Update the page links in the loop -->
+                            <% for (let i=1; i <=totalPages; i++) { %>
+                                <li class="page-item <%= currentPage === i ? 'active' : '' %>" aria-current="page">
+                                    <a class="page-link" href="?page=<%= i %>&sort=<%= sortingParameter %>">
+                                        <%= i %>
+                                    </a>
+                                </li>
+                                <% } %>
+
+                                    <!-- Update the next page link -->
+                                    <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                                        <a class="page-link page-link-next"
+                                            href="?page=<%= currentPage + 1 %>&sort=<%= sortingParameter %>"
+                                            aria-label="Next">
+                                            Next <span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                                        </a>
+                                    </li>
+
+                        </ul>
+                    </nav>
+
+                </div>
+                <div class="col-lg-3 primary-sidebar sticky-sidebar mt-30">
+                    <div class="sidebar-widget price_range range mb-30">
+                        <div class="widget-header position-relative mb-20 pb-10">
+                            <h5 class="widget-title mb-10">Fillters</h5>
+                            <div class="bt-1 border-color-1"></div>
+                        </div>
+                        <form action="/productList" method="get">
+                            <div class="col-md-3">
+                                <h5>Category</h5>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <% for (let i=0; i < categoryData.length; i++) { %>
+                                            <label class="mb-2 form-check form-check-inline">
+                                                <input class="form-check-input" name="category" id="category"
+                                                    value="<%= categoryData[i].category %>" type="checkbox"  <% if (selectedFilters.category.includes(categoryData[i].category)) { %>checked<% } %>>
+                                                <span class="form-check-label">
+                                                    <%= categoryData[i].category %>
+                                                </span>
+                                            </label>
+                                            <% } %>
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div>
+
+
+
+                            <hr class="mb-4 mt-0">
+                            <div class="col-md-12">
+                                <h5>Frame Type</h5>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-4">
+                                        <label class="mb-2 form-check form-check-inline" style="width: 45%;">
+                                            <input class="form-check-input" name="type" id="mechanism" value="Full Rim"
+                                                type="checkbox" <% if (selectedFilters.type.includes("Full Rim")) { %>checked<% } %> >
+                                            <span class="form-check-label"> Full Rim </span>
+                                        </label>
+                                        <label class="mb-2 form-check form-check-inline" style="width: 45%;">
+                                            <input class="form-check-input" name="type" id="mechanism" value="Half Rim"
+                                                type="checkbox"   <% if (selectedFilters.type.includes("Half Rim")) { %>checked<% } %> >
+                                            <span class="form-check-label"> Half Rim </span>
+                                        </label>
+                                        <label class="mb-2 form-check form-check-inline" style="width: 45%;">
+                                            <input class="form-check-input" name="type" id="mechanism" value="Rimless"
+                                                type="checkbox"  <% if (selectedFilters.type.includes("Rimless")) { %>checked<% } %> >
+                                            <span class="form-check-label"> Rimless </span>
+                                        </label>
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div>
+                            <hr>
+                            <div class="col-md-12">
+                                <h5> Frame Shape </h5>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-4">
+                                        <label class="mb-2 form-check form-check-inline" style="width: 45%;">
+                                            <input class="form-check-input" name="shape" value="Octaganol"
+                                                type="checkbox"  <% if (selectedFilters.shape.includes("Octaganol")) { %>checked<% } %> >
+                                            <span class="form-check-label"> Octaganol </span>
+                                        </label>
+                                        <label class="mb-2 form-check form-check-inline" style="width: 45%;">
+                                            <input class="form-check-input" name="shape" value="Aviator"
+                                                type="checkbox"  <% if (selectedFilters.shape.includes("Aviator")) { %>checked<% } %> >
+                                            <span class="form-check-label"> Aviator </span>
+                                        </label>
+                                        <label class="mb-2 form-check form-check-inline" style="width: 45%;">
+                                            <input class="form-check-input" name="shape" value="Wayferer"
+                                                type="checkbox"  <% if (selectedFilters.shape.includes("Wayferer")) { %>checked<% } %> >
+                                            <span class="form-check-label"> Wayferer </span>
+                                        </label>
+                                        <label class="mb-2 form-check form-check-inline" style="width: 45%;">
+                                            <input class="form-check-input" name="shape" value="Rectangle"
+                                                type="checkbox" <% if (selectedFilters.shape.includes("Rectangle")) { %>checked<% } %> >
+                                            <span class="form-check-label"> Rectangle </span>
+                                        </label>
+                                        <label class="mb-2 form-check form-check-inline" style="width: 45%;">
+                                            <input class="form-check-input" name="shape" value="Round" type="checkbox" <% if (selectedFilters.shape.includes("Round")) { %>checked<% } %> >
+                                            <span class="form-check-label"> Round </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="col-md-12">
+                                <h5>Materials</h5>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-4">
+                                        <label class="mb-2 form-check form-check-inline">
+                                            <input class="form-check-input" name="material" value="Stainless Steel"
+                                                type="checkbox"  <% if (selectedFilters.material.includes("Stainless Steel")) { %>checked<% } %> >
+                                            <span class="form-check-label"> Stainless Steel </span>
+                                        </label>
+                                        <label class="mb-2 form-check form-check-inline">
+                                            <input class="form-check-input" name="material" value="Italian Acetate"
+                                                type="checkbox" <% if (selectedFilters.material.includes("Italian Acetate")) { %>checked<% } %> >
+                                            <span class="form-check-label"> Italian Acetate </span>
+                                        </label>
+                                        <label class="mb-2 form-check form-check-inline">
+                                            <input class="form-check-input" name="material" value="Acetate"
+                                                type="checkbox" <% if (selectedFilters.material.includes("Acetate")) { %>checked<% } %> >
+                                            <span class="form-check-label"> Acetate </span>
+                                        </label> 
+                                        <label class="mb-2 form-check form-check-inline">
+                                            <input class="form-check-input" name="material" value="Polycarbonate"
+                                                type="checkbox"  <% if (selectedFilters.material.includes("Polycarbonate")) { %>checked<% } %> >
+                                            <span class="form-check-label"> Polycarbonate </span>
+                                        </label>
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div>
+                            <hr>
+                            <div class="col-md-3">
+                                <h5>Brands</h5>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="mb-2 form-check form-check-inline">
+                                            <input class="form-check-input" name="brand" value="Vincent Chase" type="checkbox"
+                                            <% if (selectedFilters.brand.includes("Vincent Chase")) { %>checked<% } %> >
+                                            <span class="form-check-label"> Vincent Chase </span>
+                                        </label>
+                                        <label class="mb-2 form-check form-check-inline">
+                                            <input class="form-check-input" name="brand" value="John Jacobs"
+                                                type="checkbox"  <% if (selectedFilters.brand.includes("John Jacobs")) { %>checked<% } %> >
+                                            <span class="form-check-label"> John Jacobs </span>
+                                        </label>
+                                        <label class="mb-2 form-check form-check-inline">
+                                            <input class="form-check-input" name="brand" value="Hooper" type="checkbox"
+                                            <% if (selectedFilters.brand.includes("Hooper")) { %>checked<% } %> >
+                                            <span class="form-check-label"> Hooper </span>
+                                        </label>
+                                        <label class="mb-2 form-check form-check-inline">
+                                            <input class="form-check-input" name="brand" value="Carlton London"
+                                                type="checkbox" <% if (selectedFilters.brand.includes("Carlton London")) { %>checked<% } %> >
+                                            <span class="form-check-label"> Carlton London </span>
+                                        </label>
+                                    </div>
+                                </div> <!-- col.// -->
+                            </div>
+                            <button type="submit">Filter</button>
+                            <a href="clearFilters" style="margin-left: 50px;">Clear Filters</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <%- include('../layouts/footer') %>

@@ -1,0 +1,91 @@
+<%- include('../layouts/header') %>
+
+<main class="main">
+    <div class="page-content mt-4">
+        <div class="container">
+            <section style="border: 1px solid black;">
+                <div class="container py-5">
+                  <div>
+                    <h2>Edit Profile</h2>
+                  </div>
+                  <hr>
+                    <div class="row">
+                        <form action="/editUserProfile" method="post">
+                        <div class="col-lg-8">
+                          <div class="card mb-4">
+                            <div class="card-body">
+                              <div class="row">
+                                <div class="col-sm-3">
+                                  <p class="mb-0">Full Name</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input class="form-control" name="name" value="<%= User[0].name %>" type="text">
+                           
+                         
+                                </div>
+                              </div>
+                              <hr />
+                              <div class="row">
+                                <div class="col-sm-3">
+                                  <p class="mb-0">email</p>
+                                </div>
+                                <div class="col-sm-9">
+                      
+                                  <input class="form-control" name="email" value="<%= User[0].email %>"  disabled type="text">
+                                </div>
+                              </div>
+                              <hr />
+                              <div class="row">
+                                <div class="col-sm-3">
+                                  <p class="mb-0">Mobile</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <input class="form-control" name="mobile" id="mobileInput" value="<%= User[0].mobile %>" type="tel">
+                                    <small id="mobileError" class="form-text text-danger"></small>
+                                </div>
+                                
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <button type="submit" class="btn mt-5 btn-outline-primary btn-lg">Apply changes</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const mobileInput = document.getElementById('mobileInput');
+        const mobileError = document.getElementById('mobileError');
+
+        mobileInput.addEventListener('input', function () {
+            const mobileValue = mobileInput.value.trim();
+            const isValidMobile = /^\d{10}$/.test(mobileValue);
+
+            if (isValidMobile) {
+                mobileError.textContent = '';
+            } else {
+                mobileError.textContent = 'Mobile number must be 10 digits.';
+            }
+        });
+
+        // Optionally, you can add a check on form submission
+        document.querySelector('form').addEventListener('submit', function (event) {
+            const mobileValue = mobileInput.value.trim();
+            const isValidMobile = /^\d{10}$/.test(mobileValue);
+
+            if (!isValidMobile) {
+                mobileError.textContent = 'Mobile number must be 10 digits.';
+                event.preventDefault(); // Prevent form submission if validation fails
+            }
+        });
+    });
+</script>
+
+
+<%- include('../layouts/footer') %>
