@@ -34,6 +34,7 @@ app.use((req, res, next) => {
 });
 
 // Connect to the database
+connectDB();
 
 // Start the server
 const PORT = process.env.PORT || 3000;
