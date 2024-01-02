@@ -203,8 +203,15 @@
                                                     <th>Total after Coupon</th>
                                                     <td colspan="2" class="product-subtotal"><span id="totalAfterCoupon"
                                                             class="font-xl text-brand fw-900">
-                                                            <%= productTotal %>
+                                                            0
                                                         </span></td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Coupon Discount</th>
+                                                    <td colspan="2" class="product-subtotal"><span id="couponDiscount"
+                                                        class="font-xl text-brand fw-900">
+                                                       0
+                                                    </span></td>
                                                 </tr>
                                     </tbody>
                                 </table>
@@ -303,6 +310,7 @@
             });
 
             const totalAfterCouponElement = document.getElementById('totalAfterCoupon');
+            const couponDiscountElement = document.getElementById('couponDiscount')
             const couponSuccessMessage = document.getElementById('couponSuccessMessage');
 
             applyCouponButton.addEventListener('click', async function (event) {
@@ -343,13 +351,13 @@
                         });
                     } else {
                         const discountedTotal = data.discountedTotal;
-                        const normalPrice = parseFloat(orderTotalElement.innerHTML.replace("₹", ""));
-                        const difference = (normalPrice - discountedTotal).toFixed(0);
-
+                        const normalPrice = <%= productTotal %>;
+                        const difference = parseFloat(normalPrice - discountedTotal) 
                         // Display coupon success message
                         couponSuccessMessage.innerText = 'Coupon applied successfully';
 
                         totalAfterCouponElement.innerText = `₹${discountedTotal}`;
+                        couponDiscountElement.innerText = `₹${normalPrice - discountedTotal}`;
 
                         Swal.fire({
                             title: 'Success',
