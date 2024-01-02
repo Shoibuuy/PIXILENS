@@ -1,4 +1,4 @@
-const user = require('../model/userModel')
+const user = require('../model/userModel');
 
 const isLogin = async (req, res, next) => {
   try {
@@ -29,12 +29,19 @@ const isLogout = async (req, res, next) => {
 const isBlocked = async (req, res, next) => {
   try {
     const userId = req.session.userId;
-    const userData = await user.findById(userId)
-    if (userData.is_blocked == 1) {
-         delete req.session.userId;
-        return res.redirect("/login?isBlocked=true");
+   
+    const userData = await user.findById(userId).exec();
+   
+    if(!userData){
+      return res.redirect('/login')
+    }
+    if (userData.is_blocked === 1) {
+      
+      delete req.session.userId;
+      return res.redirect("/login?isBlocked=true");
     }
 
+    
     next();
   } catch (error) {
     console.error('Error in isBlocked middleware:', error);

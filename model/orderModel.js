@@ -16,8 +16,7 @@ const orderSchema = new mongoose.Schema({
     default : generateRandomNumberWithPrefix()
   },
   address: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Address',
+    type: Array
   },
   orderDate: {
     type: Date,

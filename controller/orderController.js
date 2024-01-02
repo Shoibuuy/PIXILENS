@@ -79,11 +79,12 @@ const checkoutPage = async (req, res) => {
 }
 
 
-// ! function to place order using cashondelivery and wallet
+// ! function to place order using cash on delivery and wallet
 const postCheckout = async (req, res) => {
     const userId = req.session.userId;
-    const { address, paymentMethod, couponCode } = req.body;
+    const { addressId, paymentMethod, couponCode } = req.body;
     const payment = paymentMethod;
+    const addressData = await address.find({_id : addressId})
     try {
         const userData = await user.findById(userId);
         const cartData = await cart.findOne({ user: userId })
@@ -104,7 +105,7 @@ const postCheckout = async (req, res) => {
 
         for (const cartItem of cartItems) {
             const product = cartItem.product;
-
+            
             if (!product) {
                 return res
                     .status(500)
@@ -133,10 +134,11 @@ const postCheckout = async (req, res) => {
         if (couponCode) {
             totalAmount = await applyCoup(couponCode, totalAmount, userId);
         }
+        
 
         const orderData = new order({
             user: userId,
-            address: address,
+            address: addressData,
             orderDate: new Date(),
             status: "Pending",
             paymentMethod: payment,
@@ -206,7 +208,8 @@ const postCheckout = async (req, res) => {
 const razorpayOrder = async (req, res) => {
     try {
         const userId = req.session.userId;
-        const { address, paymentMethod, couponCode } = req.body;
+        const { addressId, paymentMethod, couponCode } = req.body;
+        const addressData = await address.find({_id : addressId})
 
         const userData = await user.findById(userId);
         const cartData = await cart.findOne({ user: userId })
@@ -253,7 +256,7 @@ const razorpayOrder = async (req, res) => {
 
         const orderData = new order({
             user: userId,
-            address: address,
+            address: addressData,
             orderDate: new Date(),
             status: "succesfull",
             paymentMethod: paymentMethod,
@@ -390,18 +393,17 @@ const userOrderDetails = async (req, res) => {
         const orderData = await order.findOne({ _id: orderId })
             .populate("user")
             .populate({
-                path: "address",
-                model: "Address",
-            })
-            .populate({
                 path: "items.product",
                 model: "Product",
             });
-        res.render("userOrderDetails", { orders: orderData , user });
+            const addressData = orderData.address
+        res.render("userOrderDetails", { orders: orderData , user , addressData });
     } catch (error) {
         console.log(error.message);
     }
 };
+
+
 
 // ! function to cancel order
 const changeOrderStatus = async (req, res) => {
@@ -465,6 +467,7 @@ const changeOrderStatus = async (req, res) => {
     }
 };
 
+
 // ! apply couopon
 const applyCoupon = async (req, res) => {
     try {
@@ -519,6 +522,7 @@ const applyCoupon = async (req, res) => {
         res.status(500).json({ errorMessage: "Internal Server Error" });
     }
 };
+
 
 // ! Function to cancel single product in an order
 const produtCancel = async (req, res) => {
