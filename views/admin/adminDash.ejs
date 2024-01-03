@@ -156,7 +156,7 @@
                             <thead>
                               <tr>
                                 <th scope="col">Order Id</th>
-                                <th scope="col">Billing Name</th>
+                                <!-- <th scope="col">Billing Name</th> -->
                                 <th scope="col">Ordered Date</th>
                                 <th scope="col">Delivery Date</th>
                                 <th scope="col">Total</th>
@@ -168,8 +168,8 @@
                             <tbody>
                                 <% orders.forEach((order) => { %>
                                     <tr>                    
-                                      <td><%= order._id %></td>
-                                      <td><%= order.user.name %></td>
+                                      <td><%= order.orderId %></td>
+                                      
                                       <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
                                       <td> <%= new Date(order.deliveryDate).toLocaleDateString() %></td>
                                       <td><%= order.totalAmount %></td>
