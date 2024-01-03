@@ -55,6 +55,8 @@ const checkoutPage = async (req, res) => {
 const postCheckout = async (req, res) => {
     const userId = req.session.userId;
     const { addressId, paymentMethod, couponCode } = req.body;
+    console.log(addressId)
+
     const payment = paymentMethod;
     const addressData = await address.find({_id : addressId})
     try {
@@ -107,7 +109,6 @@ const postCheckout = async (req, res) => {
             totalAmount = await applyCoup(couponCode, totalAmount, userId);
         }
         
-
         const orderData = new order({
             user: userId,
             address: addressData,
@@ -180,6 +181,7 @@ const postCheckout = async (req, res) => {
 const razorpayOrder = async (req, res) => {
     const userId = req.session.userId;
     const { addressId, paymentMethod, couponCode } = req.body;
+    
     const payment = paymentMethod
     const addressData = await address.find({_id : addressId});
     try {
@@ -227,7 +229,7 @@ const razorpayOrder = async (req, res) => {
         if (couponCode) {
             totalAmount = await applyCoup(couponCode, totalAmount, userId);
         }
-
+        
         const orderData = new order({
             user: userId,
             address: addressData,

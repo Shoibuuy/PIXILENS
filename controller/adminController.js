@@ -81,7 +81,7 @@ const loadDash = async (req, res) => {
           },
           { $group: { _id: null, monthlyAmount: { $sum: "$totalAmount" } } },
         ]),
-        user.find({ is_blocked: false, is_verified: 1 })
+        user.find({ is_blocked: false, is_varified: 1 })
           .sort({ date: -1 })
           .limit(5),
       ]);
