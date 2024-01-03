@@ -15,6 +15,8 @@ const order = require('../model/orderModel')
 const Coupon = require('../model/couponModel')
 // * transaction model 
 const Transaction = require("../model/transactionModel");
+// * helpers
+const calculateTotal = require('../helpers/calculateTotal');
 
 const mongoose = require('mongoose')
 
@@ -29,36 +31,6 @@ const razorpay = new Razorpay({
     key_secret: RAZORPAY_SECRET_KEY,
 });
 
-//   ?-------------------------------------functions to find subtotals -------------------------------------------
-
-
-const calculateSubtotal = (cart) => {
-    let subtotal = 0;
-    for (const cartItem of cart) {
-        const isDiscounted = cartItem.product.discountStatus &&
-            new Date(cartItem.product.discountStart) <= new Date() &&
-            new Date(cartItem.product.discountEnd) >= new Date();
-
-        const priceToConsider = cartItem.product.discountPrice;
-
-        subtotal += priceToConsider * cartItem.quantity;
-    }
-    return subtotal;
-};
-
-function calculateDiscountedTotal(total, discountPercentage) {
-    if (discountPercentage < 0 || discountPercentage > 100) {
-        throw new Error('Discount percentage must be between 0 and 100.');
-    }
-
-    const discountAmount = (discountPercentage / 100) * total;
-    const discountedTotal = total - discountAmount;
-
-    return discountedTotal;
-};
-
-
-
 // ?==================================================== user side ===============================================
 
 
@@ -70,7 +42,7 @@ const checkoutPage = async (req, res) => {
 
         const addresses = await address.find({ user: userId }).sort({ createdDate: -1 }).exec();
 
-        const productTotal = calculateSubtotal(orders.items);
+        const productTotal = calculateTotal.calculateSubtotal(orders.items);
 
         res.render('checkoutPage', { orders: orders.items, productTotal, addresses,user })
     } catch (error) {
@@ -161,7 +133,7 @@ const postCheckout = async (req, res) => {
         });
 
         await orderData.save();
-        if (payment == "Cash On Delivery") {
+        if (payment == "Cash on delivery") {
             const transactiondebit = new Transaction({
                 user: userId,
                 amount: totalAmount,
@@ -206,10 +178,12 @@ const postCheckout = async (req, res) => {
 
 // ! online payment 
 const razorpayOrder = async (req, res) => {
+    const userId = req.session.userId;
+    const { addressId, paymentMethod, couponCode } = req.body;
+    const payment = paymentMethod
+    const addressData = await address.find({_id : addressId});
     try {
-        const userId = req.session.userId;
-        const { addressId, paymentMethod, couponCode } = req.body;
-        const addressData = await address.find({_id : addressId})
+        
 
         const userData = await user.findById(userId);
         const cartData = await cart.findOne({ user: userId })
@@ -320,7 +294,7 @@ async function applyCoup(couponCode, discountedTotal, userId) {
         return { error: "You have already used this coupon." };
     }
     if (coupon.type === "percentage") {
-        discountedTotal = calculateDiscountedTotal(
+        discountedTotal = calculateTotal.calculateDiscountedTotal(
             discountedTotal,
             coupon.discount
         );
@@ -507,11 +481,11 @@ const applyCoupon = async (req, res) => {
             .exec();
 
         const cartItems = cartData.items || [];
-        const orderTotal = calculateSubtotal(cartItems);
+        const orderTotal = calculateTotal.calculateSubtotal(cartItems);
         let discountedTotal = 0;
 
         if (coupon.type === "percentage") {
-            discountedTotal = calculateDiscountedTotal(orderTotal, coupon.discount);
+            discountedTotal = calculateTotal.calculateDiscountedTotal(orderTotal, coupon.discount);
         } else if (coupon.type === "fixed") {
             discountedTotal = orderTotal - coupon.discount;
         }
@@ -779,57 +753,79 @@ const transactionList = async (req, res) => {
 // ! Sales Report Page 
 const loadSalesReport = async (req, res) => {
     try {
-        const user = req.session.userId
-        let query = { paymentStatus: "Payment Successful" };
-
-        if (req.query.paymentMethod) {
-            if (req.query.paymentMethod === "Online Payment") {
-                query.paymentMethod = "Online Payment";
-            } else if (req.query.paymentMethod === "Wallet") {
-                query.paymentMethod = "Wallet";
-            } else if (req.query.paymentMethod === "Cash On Delivery") {
-                query.paymentMethod = "Cash On Delivery";
-            }
+      const admin = req.session.adminData;
+  
+      let query = { paymentStatus: "Payment Successful" };
+  
+      if (req.query.paymentMethod) {
+        if (req.query.paymentMethod === "Online Payment") {
+          query.paymentMethod = "Online Payment";
+        } else if (req.query.paymentMethod === "Wallet") {
+          query.paymentMethod = "Wallet";
+        } else if (req.query.paymentMethod === "Cash on delivery") {
+          query.paymentMethod = "Cash on delivery";
         }
-
-        const orders = await order.find(query)
-            .populate("user")
-            .populate({
-                path: "address",
-                model: "Address",
-            })
-            .populate({
-                path: "items.product",
-                model: "Product",
-            })
-            .sort({ orderDate: -1 });
-
-        // total revenue
-        const totalRevenue = orders.reduce(
-            (acc, order) => acc + order.totalAmount,
-            0
-        );
-
-        const totalSales = orders.length;
-
-        // total Sold Products
-        const totalProductsSold = orders.reduce(
-            (acc, order) => acc + order.items.length,
-            0
-        );
-
-        res.render("salesReport", {
-            orders,
-            totalRevenue,
-            totalSales,
-            totalProductsSold,
-            req,
-            user
-        });
+      }
+      if (req.query.status) {
+        if (req.query.status === "Daily") {
+          query.orderDate = dateUtils.getDailyDateRange();
+        } else if (req.query.status === "Weekly") {
+          query.orderDate = dateUtils.getWeeklyDateRange();
+        } else if (req.query.status === "Yearly") {
+          query.orderDate = dateUtils.getYearlyDateRange();
+        }
+      }
+      if (req.query.startDate && req.query.endDate) {
+        query.orderDate = {
+          $gte: new Date(req.query.startDate),
+          $lte: new Date(req.query.endDate),
+        };
+      }
+  
+      const orders = await order.find(query)
+        .populate("user")
+        .populate({
+          path: "address",
+          model: "Address",
+        })
+        .populate({
+          path: "items.product",
+          model: "Product",
+        })
+        .sort({ orderDate: -1 });
+  
+      // total revenue
+      const totalRevenue = orders.reduce(
+        (acc, order) => acc + order.totalAmount,
+        0
+      );
+  
+      // all returned orders
+      const returnedOrders = orders.filter(
+        (order) => order.status === "Return Successfull"
+      );
+  
+      const totalSales = orders.length;
+  
+      // total Sold Products
+      const totalProductsSold = orders.reduce(
+        (acc, order) => acc + order.items.length,
+        0
+      );
+  
+      res.render("salesReport", {
+        orders,
+        admin,
+        totalRevenue,
+        returnedOrders,
+        totalSales,
+        totalProductsSold,
+        req,
+      });
     } catch (error) {
-        console.log(error.message);
+      console.log(error.message);
     }
-};
+  };
 
 module.exports = {
     checkoutPage,

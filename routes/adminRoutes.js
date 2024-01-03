@@ -112,6 +112,7 @@ admin_route.get('/cancelProduct', auth.isLogin, orderController.produtCancel)
 admin_route.get('/refundOrder', auth.isLogin, orderController.returnOrder)
 admin_route.get("/transactionList", auth.isLogin, orderController.transactionList)
 admin_route.get('/cancelOrder', auth.isLogin, orderController.orderCancel)
+admin_route.get("/salesReport", auth.isLogin, orderController.loadSalesReport);
 
 // ! Coupon
 admin_route.get('/addCoupon', auth.isLogin, couponController.addCouponPage)
