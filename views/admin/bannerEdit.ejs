@@ -80,6 +80,45 @@
             </form>
 
 
+            <script>
+                document.getElementById('banner-form').addEventListener('submit', function (event) {
+                    const titleInput = document.getElementById('banner_name');
+                    const subtitleInput = document.getElementById('banner_subtitle');
+                    const descriptionInput = document.getElementById('offer');
+                    let isValid = true;
+            
+                    // Reset previous error messages
+                    document.getElementById('banner_name-error').innerText = '';
+                    document.getElementById('banner_subtitle-error').innerText = '';
+                    document.getElementById('offer-error').innerText = '';
+            
+                    // Validate Title
+                    if (titleInput.value.trim() === '') {
+                        document.getElementById('banner_name-error').innerText = 'Title cannot be empty';
+                        isValid = false;
+                    }
+            
+                    // Validate Subtitle
+                    if (subtitleInput.value.trim() === '') {
+                        document.getElementById('banner_subtitle-error').innerText = 'Subtitle cannot be empty';
+                        isValid = false;
+                    }
+            
+                    // Validate Description
+                    if (descriptionInput.value.trim() === '') {
+                        document.getElementById('offer-error').innerText = 'Description cannot be empty';
+                        isValid = false;
+                    }
+            
+                   
+                    // Prevent form submission if validation fails
+                    if (!isValid) {
+                        event.preventDefault();
+                    }
+                });
+            </script>
+            
+
 
 
 

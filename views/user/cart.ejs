@@ -129,42 +129,55 @@
 
 <script>
     async function updateQuantityAndSubtotal(productId, newQuantity, index) {
-    try {
-        // Ensure newQuantity is a positive integer
-        newQuantity = parseInt(newQuantity, 10);
-        if (isNaN(newQuantity) || newQuantity < 1) {
-            alert('Please enter a valid quantity.');
-            return;
-        }
+        try {
+            // Ensure newQuantity is a positive integer
+            newQuantity = parseInt(newQuantity, 10);
+            if (isNaN(newQuantity) || newQuantity < 1) {
+                alert('Please enter a valid quantity.');
+                return;
+            }
 
-        const response = await fetch(`/updateQuantityAndSubtotal?productId=${productId}&newQuantity=${newQuantity}`, {
-            method: 'PUT',
+            const response = await fetch(`/updateQuantityAndSubtotal?productId=${productId}&newQuantity=${newQuantity}`, {
+                method: 'PUT',
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    const subtotalElement = document.getElementById(`subtotal_${index}`);
+                    subtotalElement.textContent = data.subtotal.toFixed(2);
+
+                    // Update the total amount
+                    updateTotalAmount();
+                } else {
+                    console.error('Failed to update quantity and subtotal:', data.error);
+                    if (data.error === 'Product is out of stock') {
+                        alert('Product is out of stock. Please choose a lower quantity.');
+                    }
+                }
+            } else {
+                console.error('Failed to update quantity and subtotal:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error updating quantity and subtotal:', error);
+        }
+    }
+
+    // New function to update the total amount
+    function updateTotalAmount() {
+        const totalElement = document.getElementById('totalAmount');
+        let currentTotal = 0;
+
+        // Calculate the total by summing up the subtotals
+        const subtotals = document.querySelectorAll('[id^="subtotal_"]');
+        subtotals.forEach(subtotal => {
+            currentTotal += parseFloat(subtotal.textContent);
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            if (data.success) {
-                const subtotalElement = document.getElementById(`subtotal_${index}`);
-                subtotalElement.textContent = data.subtotal.toFixed(2);
-
-                // Optionally update the total amount or other UI elements if needed
-                // const totalAmountElement = document.getElementById('totalAmount');
-                // totalAmountElement.textContent = data.newTotal.toFixed(2);
-            } else {
-                console.error('Failed to update quantity and subtotal:', data.error);
-                if (data.error === 'Product is out of stock') {
-                    alert('Product is out of stock. Please choose a lower quantity.');
-                }
-            }
-        } else {
-            console.error('Failed to update quantity and subtotal:', response.statusText);
-        }
-    } catch (error) {
-        console.error('Error updating quantity and subtotal:', error);
+        totalElement.textContent = currentTotal.toFixed(2);
     }
-}
+</script>
 
-    </script>
 
     <script>
         function updateCart(productId, newQuantity) {

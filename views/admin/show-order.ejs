@@ -157,18 +157,18 @@
                                     </span>
                                     <div class="text">
                                         <h6 class="mb-1">Deliver to</h6>
-                                        <% if(orders.address){ %>
+                                       
                                             <p class="mb-1">
-                                                Name:<%= orders.address.name %><br />
-                                                    <%= orders.address.houseName %> <br />
-                                                        <%= orders.address.street %><br />
-                                                            <%= orders.address.city %><br />
-                                                                <%= orders.address.state %>, &nbsp;<%=
-                                                                        orders.address.pincode %><br />
-                                                                        <%= orders.address.phone %><br />
+                                                Name:<%=addressData[0].name %><br />
+                                                    <%= addressData[0].houseName %> <br />
+                                                        <%= addressData[0].street %><br />
+                                                            <%= addressData[0].city %><br />
+                                                                <%= addressData[0].state %>, &nbsp;<%=
+                                                                        addressData[0].pincode %><br />
+                                                                        <%= addressData[0].phone %><br />
 
                                             </p>
-                                            <% } %>
+                                           
                                     </div>
                                 </article>
                             </div> <!-- col// -->

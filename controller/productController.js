@@ -71,7 +71,7 @@ const addProduct = async (req, res) => {
       brand: req.body.brand,
       description: req.body.description,
       price: req.body.price,
-      discountPrice: req.body.discount,
+      discountPrice: req.body.discount_price,
       category: req.body.category,
       material: req.body.material,
       quantity: req.body.quantity,
@@ -313,63 +313,41 @@ const userProductList = async (req, res) => {
     let { page, sort, search } = req.query;
 
     const perPage = 6;
-    let filterCriteria = {isListed: true};
-
+    let filterCriteria = { isListed: true };
 
     if (search) {
       filterCriteria = {
         $or: [
           { name: { $regex: new RegExp(`\\b${search}\\b`, 'i') } },
           { category: { $regex: new RegExp(`\\b${search}\\b`, 'i') } },
-          { brand: { $regex: new RegExp(`\\b${search}\\b`, 'i') } }
-                  
+          { brand: { $regex: new RegExp(`\\b${search}\\b`, 'i') } },
         ],
       };
     }
 
+    const priceRanges = {
+      under1K: { min: 0, max: 1000 },
+      "1Kto1.5k": { min: 1000, max: 1500 },
+      "1.5Kto2K": { min: 1500, max: 2000 },
+      "2Kto2.5K": { min: 2000, max: 2500 },
+      "2.5Kabove": { min: 2500, max: Number.MAX_VALUE },
+    };
 
-    //** SEARCH FILTER */
-    if (req.query.searchcategory) {
-      filterCriteria.category = { $in: req.query.searchcategory };
-    }
-    if (req.query.searchtype) {
-      filterCriteria.type = { $in: req.query.searchtype };
-    }
-    if (req.query.searchbrand) {
-      filterCriteria.brand = { $in: req.query.searchbrand };
-    }
-    if (req.query.searchmaterial) {
-      filterCriteria.material = { $in: req.query.req.query.searchmaterial };
-    }
-    if (req.query.searchshape) {
-      filterCriteria.shape = { $in: req.query.searchshape };
-    }
+    // Handle Price Range Filter
+    const priceRangeQuery = req.query.pricerange;
+    let priceRangeFilter = {};
 
-
-
-    //** FITER OPTIONS */
-
-    if (req.query.brand) {
-      filterCriteria.brand = { $in: req.query.brand };
+    if (priceRangeQuery && priceRanges[priceRangeQuery]) {
+      priceRangeFilter = {
+        discountPrice: {
+          $gte: priceRanges[priceRangeQuery].min,
+          $lt: priceRanges[priceRangeQuery].max,
+        },
+      };
     }
 
-    if (req.query.type) {
-      filterCriteria.type = { $in: req.query.type };
-    }
-    
-    if (req.query.category) {
-      filterCriteria.category = { $in: req.query.category };
-    }
-    
-    if (req.query.material) {
-      filterCriteria.material = { $in: req.query.material };
-    }
-    
-    if (req.query.shape) {
-      filterCriteria.shape = { $in: req.query.shape };
-    }
-    
-    
+    // Merge the existing filterCriteria with priceRangeFilter
+    filterCriteria = { ...filterCriteria, ...priceRangeFilter };
 
     const totalProducts = await Product.countDocuments(filterCriteria);
 
@@ -388,27 +366,41 @@ const userProductList = async (req, res) => {
     const totalPages = Math.ceil(totalProducts / perPage);
 
     const productData = await Product.find(filterCriteria)
-  .sort(sortOption)
-  .skip((currentPage - 1) * perPage)
-  .limit(perPage);
+      .sort(sortOption)
+      .skip((currentPage - 1) * perPage)
+      .limit(perPage);
 
     const categoryData = await categoryModel.find({});
 
     const selectedFilters = {
-      category: req.query.category?req.query.category:req.query.searchcategory || [],
-      type: req.query.type? req.query.type:req.query.searchtype || [],
-      shape: req.query.shape?req.query.shape:req.query.searchshape || [],
-      material: req.query.material?req.query.material:req.query.searchmaterial || [],
-      brand: req.query.brand?req.query.brand:req.query.searchbrand || [],
+      category: req.query.category ? req.query.category : req.query.searchcategory || [],
+      type: req.query.type ? req.query.type : req.query.searchtype || [],
+      shape: req.query.shape ? req.query.shape : req.query.searchshape || [],
+      material: req.query.material ? req.query.material : req.query.searchmaterial || [],
+      brand: req.query.brand ? req.query.brand : req.query.searchbrand || [],
+      priceRange: priceRangeQuery || '',
     };
-    
 
-    res.render('userProductList', { user, productData, totalProducts, categoryData, selectedFilters, currentPage, totalPages, sortingParameter: sort,search });
+    res.render('userProductList', {
+      user,
+      productData,
+      priceRanges,
+      totalProducts,
+      categoryData,
+      selectedFilters,
+      currentPage,
+      totalPages,
+      sortingParameter: sort,
+      search,
+      req,
+    });
   } catch (error) {
     console.log(error.message);
     res.status(500).send('Internal Server Error');
   }
 };
+
+
 
 
 

@@ -636,17 +636,18 @@ const returnOrder = async (req, res) => {
 const adminOrderDetails = async (req, res) => {
     try {
         const orderId = req.query.orderId;
+
         const Order = await order.findOne({ _id: orderId })
+        
             .populate("user")
-            .populate({
-                path: "address",
-                model: "Address",
-            })
+
             .populate({
                 path: "items.product",
                 model: "Product",
             });
-        res.render("show-order", { orders: Order  });
+            const addressData = Order.address
+
+        res.render("show-order", { orders: Order ,addressData });
     } catch (error) {
         console.log(error.message);
     }
