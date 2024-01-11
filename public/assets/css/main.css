@@ -5786,7 +5786,7 @@ h6.post-title {
   animation: 700ms ease-in-out 0s normal none 1 running fadeInDown;
   -webkit-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.05);
   box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.05);
-  position: fixed;
+ 
   top: 0;
   width: 100%;
   z-index: 999;

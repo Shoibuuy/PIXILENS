@@ -312,7 +312,7 @@ const userProductList = async (req, res) => {
     const user = req.session.userId;
     let { page, sort, search } = req.query;
 
-    const perPage = 6;
+    const perPage = 9;
     let filterCriteria = { isListed: true };
 
     if (search) {
@@ -330,7 +330,7 @@ const userProductList = async (req, res) => {
       "1Kto1.5k": { min: 1000, max: 1500 },
       "1.5Kto2K": { min: 1500, max: 2000 },
       "2Kto2.5K": { min: 2000, max: 2500 },
-      "2.5Kabove": { min: 2500, max: Number.MAX_VALUE },
+      "2.5Kabove": { min: 2500, max: 5000 },
     };
 
     // Handle Price Range Filter

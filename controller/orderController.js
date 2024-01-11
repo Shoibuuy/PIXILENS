@@ -18,6 +18,8 @@ const Transaction = require("../model/transactionModel");
 // * helpers
 const calculateTotal = require('../helpers/calculateTotal');
 
+const dateUtils = require('../helpers/dateUtil');
+
 const mongoose = require('mongoose')
 
 require("dotenv").config();
@@ -55,7 +57,7 @@ const checkoutPage = async (req, res) => {
 const postCheckout = async (req, res) => {
     const userId = req.session.userId;
     const { addressId, paymentMethod, couponCode } = req.body;
-    console.log(addressId)
+    
 
     const payment = paymentMethod;
     const addressData = await address.find({_id : addressId})

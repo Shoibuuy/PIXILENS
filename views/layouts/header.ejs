@@ -80,11 +80,110 @@
                             |
                             <a href="/register" style="font-size:larger; margin-left: 10px;"> Signup</a>
                             <% } %>
+
+                            <div class="header-bottom header-bottom-bg-color sticky-bar">
+                                <div class="container">
+                                    <div class="header-wrap header-space-between position-relative">
+                                      
+                                    
+                                    
+                                        <div class="header-action-right d-block d-lg-none">
+                                            <div class="header-action-2">
+                                                <div class="header-action-icon-2 d-block d-lg-none">
+                                                    <div class="burger-icon burger-icon-white">
+                                                        <span class="burger-icon-top"></span>
+                                                        <span class="burger-icon-mid"></span>
+                                                        <span class="burger-icon-bottom"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
+                                </div>
+   
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+         
         </div>
+        
     </header>
+    <div class="mobile-header-active mobile-header-wrapper-style">
+        <div class="mobile-header-wrapper-inner">
+            <div class="mobile-header-top">
+                <div class="mobile-header-logo">
+                    <a href="/home"><img src="assets/imgs/theme/logo.svg" alt="logo"></a>
+                </div>
+                <div class="mobile-menu-close close-style-wrap close-style-position-inherit">
+                    <button class="close-style search-close">
+                        <i class="icon-top"></i>
+                        <i class="icon-bottom"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-header-content-area">
+                
+                <div class="mobile-menu-wrap mobile-header-border">
+                   
+                    <!-- mobile menu start -->
+                    <nav>
+                        <ul class="mobile-menu">
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="/home">Home</a>
+                                
+                            </li>
+                            <li class="menu-item-has-children"><span class="menu-expand"></span><a href="/productList">shop</a>
+                               
+                            </li>
+                            
+                            
+                        </ul>
+                    </nav>
+                    <!-- mobile menu end -->
+                </div> <hr><br>
+                
+                <div class="mobile-social-icon">
+                    <h5 class="mb-15 text-grey-4">Follow Us</h5>
+                    <a href="#"><img src="assets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                    <a href="#"><img src="assets/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                    <a href="#"><img src="assets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                    <a href="#"><img src="assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                    <a href="#"><img src="assets/imgs/theme/icons/icon-youtube.svg" alt=""></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <style>
+        
+        #mobile-header {
+    transition: transform 0.3s ease-in-out;
+}
+#mobile-header.mobile-header-hidden {
+    transform: translateY(-100%);
+}
+
+    </style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var prevScrollpos = window.pageYOffset;
+
+        window.onscroll = function () {
+            var currentScrollPos = window.pageYOffset;
+
+            if (prevScrollpos > currentScrollPos) {
+                document.getElementById("mobile-header").classList.remove("mobile-header-hidden");
+            } else {
+                document.getElementById("mobile-header").classList.add("mobile-header-hidden");
+            }
+
+            prevScrollpos = currentScrollPos;
+        };
+    });
+</script>
+

@@ -230,12 +230,13 @@ const loadHome = async (req, res) => {
   try {
     const user = req.session.userId
     const categories = await Category.find({});
+    const productData = await product.find({}).limit(4)
     const banData = await Banner.find({isListed : true})
     if (user) {
-      res.render('home', { user, categories , banData });
+      res.render('home', { user, categories , banData , productData});
 
     } else {
-      res.render('home', { user: null, categories , banData });
+      res.render('home', { user: null, categories , banData , productData});
 
     }
 
