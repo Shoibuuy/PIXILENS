@@ -280,6 +280,8 @@ const productViewInfo = async (req, res) => {
   }
 }
 
+
+// ! UnList Product 
 const unlistProduct = async (req, res) => {
   try {
     const productId = req.query.id;
@@ -291,7 +293,6 @@ const unlistProduct = async (req, res) => {
 };
 
 // ! List Product 
-
 const listProduct = async (req, res) => {
   try {
     const productId = req.query.id;
@@ -345,6 +346,47 @@ const userProductList = async (req, res) => {
         },
       };
     }
+
+       //** SEARCH FILTER */
+       if (req.query.searchcategory) {
+        filterCriteria.category = { $in: req.query.searchcategory };
+      }
+      if (req.query.searchtype) {
+        filterCriteria.type = { $in: req.query.searchtype };
+      }
+      if (req.query.searchbrand) {
+        filterCriteria.brand = { $in: req.query.searchbrand };
+      }
+      if (req.query.searchmaterial) {
+        filterCriteria.material = { $in: req.query.req.query.searchmaterial };
+      }
+      if (req.query.searchshape) {
+        filterCriteria.shape = { $in: req.query.searchshape };
+      }
+  
+  
+  
+      //** FITER OPTIONS */
+  
+      if (req.query.brand) {
+        filterCriteria.brand = { $in: req.query.brand };
+      }
+  
+      if (req.query.type) {
+        filterCriteria.type = { $in: req.query.type };
+      }
+      
+      if (req.query.category) {
+        filterCriteria.category = { $in: req.query.category };
+      }
+      
+      if (req.query.material) {
+        filterCriteria.material = { $in: req.query.material };
+      }
+      
+      if (req.query.shape) {
+        filterCriteria.shape = { $in: req.query.shape };
+      }
 
     // Merge the existing filterCriteria with priceRangeFilter
     filterCriteria = { ...filterCriteria, ...priceRangeFilter };
@@ -401,6 +443,14 @@ const userProductList = async (req, res) => {
 };
 
 
+const clearFilters = async (req, res) => {
+  try {
+      res.redirect('/productList');
+  } catch (error) {
+      console.log(error.message);
+  }
+};
+
 
 
 
@@ -437,5 +487,6 @@ module.exports = {
   unlistProduct,
   listProduct,
   userProductList,
-  loadProductPage
+  loadProductPage,
+  clearFilters
 };

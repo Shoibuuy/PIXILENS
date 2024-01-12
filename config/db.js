@@ -2,7 +2,10 @@ const mongoose = require('mongoose')
 
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect('mongodb+srv://shabzmhmd9:1234@cluster0.a8cdy0y.mongodb.net/pixilens');
+        const conn = await mongoose.connect('mongodb://localhost:27017/VincentChase'); 
+
+
+
         if (conn) {
             console.log('server created succesfully')
         }
