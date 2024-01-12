@@ -42,9 +42,9 @@
                                 
                                     <div class="card-1 m-3">
                                         <figure class=" img-hover-scale overflow-hidden">
-                                        <a href="/userProductList"><img src="adminassets/imgs/categoryImages/<%= categories[i].image %>" alt=""></a>
+                                        <a href="/productList?category=<%= categories[i].category %>&pricerange=all"><img src="adminassets/imgs/categoryImages/<%= categories[i].image %>" alt=""></a>
                                     </figure>
-                                    <h5><a href="#"><%= categories[i].category %></a></h5>
+                                    <h5><a ><%= categories[i].category %></a></h5>
                                 </div>
 
                            <% } %>       
